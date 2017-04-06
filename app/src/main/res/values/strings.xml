@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">OpenWeather</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="cities">
+        <item>Valladolid</item>
+        <item>Avila</item>
+        <item>Segovia</item>
+        <item>Soria</item>
+        <item>Burgos</item>
+        <item>Palencia</item>
+        <item>León</item>
+        <item>Salamanca</item>
+        <item>Zamora</item>
+    </string-array>
+    
+    <string name="wind_label">Viento</string>
+    <string name="sky_label">Cielo</string>
+    <string name="pressure_label">Presión</string>
+    <string name="humidity_label">Humedad</string>
+    <string name="sunrise_label">Amanecer</string>
+    <string name="sunset_label">Ocaso</string>
+
+    <string name="temperature_constant">%1.2f ºC</string>
+    <string name="city_weather_label">El tiempo en %1$s</string>
+
+</resources>
