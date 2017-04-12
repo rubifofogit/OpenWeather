@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
+        <fragment
+
+            android:tag="FIRST_FRAGMENT"
+            android:name="es.adolfo.openweather.WeatherFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 
@@ -17,6 +23,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
+
+        <fragment
+
+            android:tag="SECOND_FRAGMENT"
+            android:name="es.adolfo.openweather.WeatherFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </FrameLayout>
 

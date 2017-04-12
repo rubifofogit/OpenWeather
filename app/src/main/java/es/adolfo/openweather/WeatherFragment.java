@@ -3,6 +3,9 @@ package es.adolfo.openweather;
 import android.app.Activity;
 import android.content.Context;
 import java.util.TimeZone;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -31,12 +34,9 @@ import es.adolfo.openweather.task.WeatherTask;
 
 public class WeatherFragment extends Fragment implements WeatherTask.AsyncResponse {
 
-    private static final String ARG_PARAM1 = "city";
-    private static final String ARG_PARAM2 = "weather";
-
+    private WeatherTask weatherTask;
     private static String TAG = "WeatherFragment";
-
-    private boolean first = true;
+    
 
     private City city;
     private String appid = "f34aa163c9c1a53db7404ed0f25f8b51";
@@ -58,10 +58,9 @@ public class WeatherFragment extends Fragment implements WeatherTask.AsyncRespon
 
     }
 
-    public static WeatherFragment newInstance(City city) {
+    public static WeatherFragment newInstance() {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, city);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,7 +72,6 @@ public class WeatherFragment extends Fragment implements WeatherTask.AsyncRespon
             currentWeather = (Weather) savedInstanceState.getSerializable("currentWeather");
             city = (City) savedInstanceState.getSerializable("city");
         }
-        Log.d("onCreate","true");
     }
 
     @Override
@@ -93,7 +91,6 @@ public class WeatherFragment extends Fragment implements WeatherTask.AsyncRespon
         ArrayAdapter<City> adapter = new ArrayAdapter<City>(getActivity(),
                  android.R.layout.simple_spinner_item,dataBaseModel.getCityByProv("28"));
         dataBaseModel.close();
-        int position = adapter.getPosition(city);
         Log.d("onCreateView","city is " + (city == null?"null":city.toString()));
         Log.d("onCreateView","currentWeather is " + (currentWeather == null?"null":currentWeather.getName().toString()));
         if(currentWeather!=null) {
@@ -104,13 +101,12 @@ public class WeatherFragment extends Fragment implements WeatherTask.AsyncRespon
         }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setSelection(position);
         button = (Button) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 locale = Locale.getDefault().getCountry();
-                WeatherTask weatherTask = new WeatherTask();
+                weatherTask = new WeatherTask();
                 weatherTask.setDelegate(WeatherFragment.this);
                 city =  (City) spinner.getSelectedItem();
                 Log.d("City has value",city.toString());
@@ -129,11 +125,28 @@ public class WeatherFragment extends Fragment implements WeatherTask.AsyncRespon
     }
 
     @Override
-    public void processFinish(Weather weather) {
+    public void onPostExecute(Weather weather) {
         content.setVisibility(LinearLayout.VISIBLE);
         currentWeather = weather;
         populateTable(weather);
 
+    }
+
+    @Override
+    public void onPreExecute() {
+        NetworkInfo info = getActiveNetworkInfo();
+        if(info==null || !info.isConnected() ) {
+            weatherTask.cancel(true);
+        }
+    }
+
+
+
+    private NetworkInfo getActiveNetworkInfo() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo;
     }
 
     private void populateTable(Weather weather) {

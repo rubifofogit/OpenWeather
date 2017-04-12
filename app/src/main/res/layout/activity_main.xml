@@ -8,5 +8,11 @@
     tools:context="es.adolfo.openweather.MainActivity">
 
 
+    <fragment
+        android:id="@+id/fragment"
+        android:tag="FIRST_FRAGMENT"
+        android:name="es.adolfo.openweather.WeatherFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

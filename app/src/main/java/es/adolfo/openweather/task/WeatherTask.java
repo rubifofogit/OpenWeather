@@ -1,5 +1,8 @@
 package es.adolfo.openweather.task;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -28,6 +31,11 @@ public class WeatherTask extends AsyncTask<String,Void,Weather> {
     private static final String TAG = "WeatherTask";
 
     private AsyncResponse delegate = null;
+
+    @Override
+    protected void onPreExecute() {
+        delegate.onPreExecute();
+    }
 
     @Override
     protected Weather doInBackground(String... params) {
@@ -70,6 +78,9 @@ public class WeatherTask extends AsyncTask<String,Void,Weather> {
         return weather;
     }
 
+
+
+
     private String buildQueryParameters(Map<String,String> params) throws UnsupportedEncodingException {
         boolean first = true;
         StringBuilder result = new StringBuilder();
@@ -90,7 +101,7 @@ public class WeatherTask extends AsyncTask<String,Void,Weather> {
     @Override
     protected void onPostExecute(Weather weather) {
         if (delegate != null) {
-            delegate.processFinish(weather);
+            delegate.onPostExecute(weather);
         }
     }
 
@@ -99,6 +110,7 @@ public class WeatherTask extends AsyncTask<String,Void,Weather> {
     }
 
     public interface AsyncResponse {
-        public void processFinish(Weather weather);
+        public void onPostExecute(Weather weather);
+        public void onPreExecute();
     }
 }
