@@ -22,7 +22,7 @@ public class DataBaseModel extends SQLiteOpenHelper{
 	private static DataBaseModel mInstance = null;
 	
 	private static String DB_PATH = "/data/data/es.adolfo.openweather/databases/";
-	private static String DB_NAME = "open_weather_new.sqlite";
+	private static String DB_NAME = "open_weather.sqlite";
     private static String DB_NAME_OLD = "database.sqlite";
 	private static int DATABASE_VERSION = 1;
 	
@@ -66,7 +66,7 @@ public class DataBaseModel extends SQLiteOpenHelper{
     	boolean dbExist = checkDataBase();
  
     	if(dbExist){
-    		this.getWritableDatabase();
+    		this.getWritableDatabase().close();
     	}else{
     		
         	boolean dbExistOld = checkDataBaseOld();
@@ -266,5 +266,12 @@ public class DataBaseModel extends SQLiteOpenHelper{
 
 		return resultList;
 	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		this.close();
+		super.finalize();
+	}
+
 }
 

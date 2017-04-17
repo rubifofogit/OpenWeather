@@ -58,12 +58,6 @@ public class WeatherFragment extends Fragment implements WeatherTask.AsyncRespon
 
     }
 
-    public static WeatherFragment newInstance() {
-        WeatherFragment fragment = new WeatherFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
